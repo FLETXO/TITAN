@@ -1,493 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>𝗕𝗢𝗦𝗦 𝗙𝗨𝗦𝗜𝗢𝗡</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pro Mode Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Root Variables for a Red & Black Theme */
     :root {
-      --dark-bg: #000000;
-      --card-bg: #1a1f2c;
-      --text-light: #e0e6f0;
-      --text-dark: #0d1117;
-
-      --neon-cyan: #00f0ff;
-      --neon-blue: #00aaff;
-      --neon-purple: #a050ff;
-      --neon-green: #3aff95;
-      --neon-red: #ff4d4d;
-      --neon-yellow: #fff000;
-
-      --border-glow-strength: 0 0 15px;
-      --text-glow-strength: 0 0 8px;
+      --pink-50: #ffe6ef;
+      --pink-100: #ffd6e6;
+      --pink-200: #ffb8cf;
+      --pink-300: #ff9cb9;
+      --pink-400: #ff7aa1;
+      --dark-800: #0a0a0f;
+      --dark-900: #050509;
+      --neon-red: #ff1a4b;
+      --neon-magenta: #ff2ba6;
+      --neon-blue: #00d9ff;
+      --text-dark: #1a0f14;
+      --shadow-strong: 0 0 24px rgba(255, 26, 75, 0.45), 0 0 64px rgba(0, 217, 255, 0.25);
     }
 
-    /* Universal Box Sizing & Font Smoothing */
-    * {
-      box-sizing: border-box;
+    html, body {
+      height: 100%;
+    }
+
+    body {
       margin: 0;
-      padding: 0;
+      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text-dark);
+      background:
+        radial-gradient(1200px 800px at 10% 20%, rgba(255, 0, 0, 0.08), transparent 50%),
+        radial-gradient(900px 700px at 85% 70%, rgba(0, 0, 0, 0.12), transparent 50%),
+        linear-gradient(135deg, rgba(255, 122, 161, 0.18), rgba(255, 184, 207, 0.18)),
+        radial-gradient(circle at 50% 50%, var(--pink-100), var(--pink-300));
+      min-height: 100%;
+      overflow-x: hidden;
+      position: relative;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Body & HTML Styling for Responsiveness */
-    body {
-      background: var(--dark-bg);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-light);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+    /* Volcano-like crack overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        /** soft lava glow blotches */
+        radial-gradient(700px 420px at 20% 25%, rgba(255, 26, 75, 0.20) 0, rgba(255, 26, 75, 0.10) 30%, transparent 60%),
+        radial-gradient(900px 540px at 80% 70%, rgba(0, 0, 0, 0.25) 0, rgba(0, 0, 0, 0.08) 35%, transparent 65%),
+        /** jagged crack bands */
+        repeating-linear-gradient(25deg,
+          transparent 0 34px,
+          rgba(0, 0, 0, 0.65) 34px 36px,
+          rgba(255, 26, 75, 0.75) 36px 37px,
+          rgba(0, 0, 0, 0.65) 37px 38px,
+          transparent 38px 72px
+        );
+      mix-blend-mode: multiply;
+      opacity: 0.33;
+      filter: blur(0.2px) drop-shadow(0 0 12px rgba(255, 26, 75, 0.25));
+    }
+
+    .neon-sheen {
+      position: fixed;
+      inset: -20vmax;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 30% -10%, rgba(0, 217, 255, 0.12), transparent 40%),
+                  radial-gradient(ellipse at 120% 120%, rgba(255, 43, 166, 0.10), transparent 50%);
+      filter: blur(28px) saturate(120%);
+      opacity: 0.9;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
       min-height: 100vh;
-      padding: 20px;
-      overflow-y: auto;
+      padding: 24px;
     }
 
-    /* Container with max width for mobile screens */
-    #predictor-content {
-      width: 100%;
-      max-width: 500px; /* Slightly wider for tablets, smaller for phones */
-      padding: 10px;
-    }
-
-    /* SVG Title styling with responsive font size */
-    .wrapper {
-      text-align: center;
-      margin-bottom: 30px;
-      filter: drop-shadow(0 0 8px var(--neon-red));
-    }
-    .wrapper svg {
-      width: 100%;
-      height: 50px;
-    }
-    .wrapper svg text {
-      font-family: 'Orbitron', sans-serif;
-      fill: none;
-      stroke: var(--neon-red);
-      stroke-width: 1.2px;
-      stroke-dasharray: 600;
-      stroke-dashoffset: 600;
-      animation: dash 5s linear infinite alternate;
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    @keyframes dash {
-      0% { stroke-dashoffset: 600; }
-      100% { stroke-dashoffset: 0; }
-    }
-
-    /* Card styles with responsive padding & font sizes */
     .card {
-      background: #2c2c2c;
-      border-radius: 15px;
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      box-shadow: var(--border-glow-strength) var(--neon-red), inset 0 0 5px rgba(255, 0, 0, 0.2);
-      padding: 15px;
-      margin-top: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--border-glow-strength) var(--neon-purple), inset 0 0 8px rgba(255, 0, 0, 0.5);
+      width: min(980px, 92vw);
+      background: linear-gradient(180deg, rgba(255, 230, 239, 0.66), rgba(255, 214, 230, 0.75));
+      border: 1px solid rgba(10, 10, 15, 0.14);
+      box-shadow: 0 12px 28px rgba(26, 15, 20, 0.15), var(--shadow-strong);
+      border-radius: 20px;
+      padding: 28px 24px 32px;
+      backdrop-filter: blur(6px) saturate(120%);
     }
 
-    /* Labels and Inputs */
-    .period-label {
-      font-weight: 600;
-      margin-bottom: 10px;
+    .top-row {
       display: flex;
       align-items: center;
-      font-size: 1em;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
-    }
-    .period-label i {
-      margin-right: 8px;
-    }
-    .period-input {
-      width: 100%;
-      padding: 10px;
-      text-align: center;
-      font-size: 1.2em;
-      font-family: 'Orbitron', sans-serif;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--neon-red);
-      border-radius: 8px;
-      margin-bottom: 12px;
-      color: var(--neon-green);
-      box-shadow: inset 0 0 8px rgba(58, 255, 149, 0.5);
-      text-shadow: var(--text-glow-strength) var(--neon-green);
-    }
-
-    /* Result Section */
-    .result-section {
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      margin-top: 10px;
-      font-size: 1em;
-    }
-    .result-section span i {
-      margin-right: 6px;
-    }
-    .big-text {
-      background: linear-gradient(45deg, var(--neon-green), var(--neon-red));
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 1em;
-      font-weight: 700;
-      color: var(--text-dark);
-      box-shadow: 0 0 10px rgba(58, 255, 149, 0.7);
-    }
-    .opposite-number {
-      font-size: 1em;
-      color: var(--neon-purple);
-      font-weight: 700;
-      text-shadow: var(--text-glow-strength) var(--neon-purple);
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
-    /* Dashboard Title and Stats */
-    .dashboard-title {
-      text-align: center;
-      font-size: 1.2em;
-      font-weight: 700;
-      margin-bottom: 20px;
-      border-bottom: 2px solid rgba(255, 0, 0, 0.3);
-      padding-bottom: 8px;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
-    }
-    .info-row {
+    .logo-row {
       display: flex;
-      justify-content: space-between;
+      gap: 10px;
       align-items: center;
-      padding: 6px 0;
-      border-bottom: 1px dashed rgba(255, 0, 0, 0.2);
-      font-size: 0.9em;
-    }
-    .info-row span:first-child {
-      display: flex;
-      align-items: center;
-      color: var(--text-light);
-    }
-    .info-row span:first-child i {
-      margin-right: 6px;
-    }
-    .connected {
-      color: var(--neon-green);
-      font-weight: bold;
-      text-shadow: var(--text-glow-strength) var(--neon-green);
     }
 
-    /* Footer styling for small screens */
-    .footer {
+    .dragon {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: radial-gradient(circle at 35% 30%, #111, #000);
+      color: #fff;
+      font-size: 28px;
+      box-shadow: inset 0 0 18px rgba(255, 26, 75, 0.45), 0 0 18px rgba(0, 217, 255, 0.35);
+      border: 1px solid rgba(255, 26, 75, 0.6);
+      transition: transform 0.25s ease;
+    }
+    .dragon:nth-child(odd) { filter: hue-rotate(15deg) saturate(110%); }
+    .dragon:hover { transform: translateY(-3px) scale(1.04); }
+
+    .brand {
+      font-family: Orbitron, Poppins, sans-serif;
+      letter-spacing: 0.02em;
+      font-size: 18px;
+      color: #1b0f15;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    .headline {
+      margin: 14px 0 4px;
+      font-family: Orbitron, Poppins, sans-serif;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.1;
+      color: #0b0710;
       text-align: center;
-      font-weight: 600;
+      text-shadow:
+        0 0 1px rgba(255, 255, 255, 0.7),
+        0 0 16px rgba(255, 26, 75, 0.55),
+        0 0 28px rgba(0, 217, 255, 0.35);
+    }
+
+    .subline {
+      text-align: center;
+      color: #3f2a34;
       font-size: 14px;
-      margin-top: 30px;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
+      margin-bottom: 18px;
     }
 
-    /* History */
-    .history-title {
-      font-size: 1.4em;
-      font-weight: 700;
-      margin-top: 30px;
+    .typewrap {
+      margin: 26px auto 12px;
+      width: min(780px, 90%);
+      min-height: 60px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 230, 239, 0.66), rgba(255, 214, 230, 0.75));
+      border: 1px solid rgba(10, 10, 15, 0.14);
+      box-shadow: inset 0 0 16px rgba(255, 26, 75, 0.18);
+      overflow: hidden;
+    }
+    .type {
+      font-family: Orbitron, Poppins, sans-serif;
+      font-size: clamp(18px, 3.2vw, 26px);
+      letter-spacing: 0.02em;
+      color: #120a0f;
+      padding: 14px 18px;
       text-align: center;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
+      white-space: nowrap;
     }
-    .history-card {
-      background: #2c2c2c;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 12px;
+
+    .cursor {
+      display: inline-block;
+      width: 1.1ch;
+      color: var(--neon-red);
+      text-shadow: 0 0 6px rgba(255, 26, 75, 0.85);
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .actions {
+      margin-top: 18px;
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
       align-items: center;
-      box-shadow: var(--border-glow-strength) rgba(255, 0, 0, 0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      font-size: 0.85em;
-      border-left: 4px solid transparent;
+      justify-content: center;
     }
-    .history-card:hover {
-      transform: translateX(3px);
-      box-shadow: var(--border-glow-strength) rgba(255, 0, 0, 0.3);
+
+    .plan-button {
+      --btn-bg: linear-gradient(180deg, #1a1a22, #0e0e14);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 5cm; /* requested approx length */
+      min-height: 54px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      color: #fff;
+      background: var(--btn-bg);
+      border: 1px solid rgba(255, 26, 75, 0.55);
+      box-shadow: 0 6px 20px rgba(26, 15, 20, 0.35), 0 0 20px rgba(255, 26, 75, 0.35);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      overflow: hidden;
+      isolation: isolate;
     }
-    .history-card.yellow {
-      border-left-color: var(--neon-yellow);
-      box-shadow: var(--border-glow-strength) rgba(255, 255, 0, 0.2);
+    .plan-button:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 24px rgba(26, 15, 20, 0.45), 0 0 28px rgba(0, 217, 255, 0.35);
+      filter: saturate(115%);
     }
-    .history-card.green {
-      border-left-color: var(--neon-green);
-      box-shadow: var(--border-glow-strength) rgba(58, 255, 149, 0.2);
+    .plan-button:active { transform: translateY(0) scale(0.98); }
+
+    .plan-button .icon {
+      width: 28px; height: 28px; display: grid; place-items: center;
+      background: radial-gradient(circle at 30% 30%, #111, #000);
+      border-radius: 8px;
+      box-shadow: inset 0 0 12px rgba(0, 217, 255, 0.35), 0 0 10px rgba(255, 26, 75, 0.45);
+      border: 1px solid rgba(0, 217, 255, 0.55);
+      font-size: 16px;
     }
-    .history-card.red {
-      border-left-color: var(--neon-red);
-      box-shadow: var(--border-glow-strength) rgba(255, 77, 77, 0.2);
+
+    .price { color: #ff9cb9; font-weight: 700; }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255, 26, 75, 0.5) 0, rgba(255, 26, 75, 0.35) 40%, rgba(0,0,0,0) 70%);
+      animation: ripple 700ms ease-out forwards;
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: screen;
+      filter: blur(0.3px);
     }
-    .history-card div strong {
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) rgba(255, 0, 0, 0.5);
+    @keyframes ripple {
+      from { width: 0; height: 0; opacity: 0.9; }
+      to { width: 360px; height: 360px; opacity: 0; }
     }
-    .history-card div i {
-      margin-right: 4px;
-    }
-    .history-actions i {
-      margin-left: 10px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: color 0.2s ease, transform 0.2s ease;
-      filter: drop-shadow(0 0 3px rgba(0,0,0,0.5));
-    }
-    .fa-trash-alt {
-      color: var(--neon-red);
-    }
-    .fa-trash-alt:hover {
-      transform: scale(1.1);
-      color: #ff0000;
-    }
-    .spinner {
-      animation: spin 1.5s linear infinite;
-      color: var(--neon-yellow);
-      filter: drop-shadow(0 0 4px var(--neon-yellow));
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .win-icon {
-      animation: bounce 0.8s ease-in-out infinite;
-      color: var(--neon-green);
-      filter: drop-shadow(0 0 5px var(--neon-green));
-    }
-    @keyframes bounce {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-    .loss-icon {
-      animation: shake 0.6s ease-in-out infinite;
-      color: var(--neon-red);
-      filter: drop-shadow(0 0 5px var(--neon-red));
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-3px); }
-      50% { transform: translateX(3px); }
-      75% { transform: translateX(-3px); }
+
+    .footer-note {
+      text-align: center;
+      color: #4b2d3a;
+      font-size: 12px;
+      margin-top: 18px;
     }
   </style>
 </head>
 <body>
-  <!-- Predictor Content -->
-  <div id="predictor-content">
-    <div class="container">
-      <div class="wrapper">
-        <svg viewBox="0 0 400 70">
-          <text x="50%" y="50%" dy=".35em" text-anchor="middle">
-            𝗕𝗢𝗦𝗦 𝗙𝗨𝗦𝗜𝗢𝗡
-          </text>
-        </svg>
-      </div>
-
-      <div class="card">
-        <div class="period-label"><i class="fa-solid fa-calendar-days"></i> Current Period</div>
-        <input type="text" id="periodDisplay" class="period-input" value="-" readonly />
-        <div class="result-section">
-          <span><i class="fa-solid fa-chart-bar"></i> Prediction</span>
-          <span class="big-text" id="predictionDisplay">-</span>
-          <span class="opposite-number" id="oppositeNumberDisplay">-</span>
+  <div class="neon-sheen" aria-hidden="true"></div>
+  <div class="container">
+    <div class="card">
+      <div class="top-row">
+        <div class="logo-row" aria-label="Dragon Logos">
+          <div class="dragon" title="Dragon">🐉</div>
+          <div class="dragon" title="Dragon">🐉</div>
+          <div class="dragon" title="Dragon">🐉</div>
+          <div class="dragon" title="Dragon">🐉</div>
         </div>
+        <div class="brand">Pro Mode • Premium</div>
       </div>
 
-      <div class="card">
-        <div class="dashboard-title">Analysis Dashboard</div>
-        <div class="info-row"><span><i class="fa-solid fa-percent"></i> Win Rate</span><span id="accuracy">0%</span></div>
-        <div class="info-row"><span><i class="fa-solid fa-trophy"></i> Wins</span><span id="wins">0</span></div>
-        <div class="info-row"><span><i class="fa-solid fa-skull-crossbones"></i> Losses</span><span id="losses">0</span></div>
-        <div class="info-row"><span><i class="fa-solid fa-server"></i> Server Status</span><span class="connected">Connected</span></div>
+      <h1 class="headline">Experience Black Neon Performance on a Baby‑Pink UI</h1>
+      <p class="subline">Crystal‑clear design with a dramatic red‑and‑black volcano crack effect. Animated, fast, and bold.</p>
+
+      <div class="typewrap">
+        <div id="type" class="type" aria-live="polite"></div>
       </div>
 
-      <div class="footer">TG @BOSSFAIZAN</div>
+      <div class="actions" id="actions" hidden>
+        <a class="plan-button" href="./packages.html?plan=premium">
+          <span class="icon">🐉</span>
+          <span>Premium Mode <span class="price">₹2,500</span></span>
+        </a>
+        <a class="plan-button" href="./packages.html?plan=platinum">
+          <span class="icon">🐉</span>
+          <span>Platinum Mode <span class="price">₹1,999</span></span>
+        </a>
+        <a class="plan-button" href="./packages.html?plan=subscription">
+          <span class="icon">🐉</span>
+          <span>Subscription Mode <span class="price">₹1,500</span></span>
+        </a>
+      </div>
 
-      <div class="history-title">Prediction History</div>
-      <div id="historyContainer"></div>
+      <p class="footer-note">Tip: Click any plan to connect to the combined Packages page.</p>
     </div>
   </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script>
+    const messages = [
+      "TEXT (Pro Mode — Premium)",
+      "Best Predictor — 100% Working",
+      "Open Premium — Buy and connect to Packages"
+    ];
 
-<script>
-  // Updated Firebase config for Android compatibility
-  const firebaseConfig = {
-    apiKey: "AIzaSyCpSU98D6wMV1HyS5DpmuaaVzDswbyNrmo",
-    databaseURL: "https://fletxofusiondino-default-rtdb.firebaseio.com"
-  };
+    const typeTarget = document.getElementById("type");
+    const actions = document.getElementById("actions");
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    function typeMessage(message, onComplete) {
+      typeTarget.innerHTML = "";
+      const text = message;
+      let index = 0;
 
-  // --- Global Variables ---
-  let historyData = [];
-  let lastFetchedPeriod = null;
-  let lastPrediction = null;
-  let lastOppositeNumber = null;
-  let globalPrediction = null;
-  let predictorInterval = null;
-
-  // --- Device ID ---
-  let deviceId = localStorage.getItem("deviceId");
-  if (!deviceId) {
-    deviceId = "device-" + Math.random().toString(36).substring(2, 15) + Date.now();
-    localStorage.setItem("deviceId", deviceId);
-  }
-
-  // --- Start predictor ---
-  startPredictor();
-
-  // --- Functions ---
-  function getOppositeNumber(prediction) {
-    const smallNumbers = [1, 2, 3, 4, 0];
-    const bigNumbers = [8, 9, 7, 6, 5];
-    let arr = prediction === "BIG" ? smallNumbers : bigNumbers;
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
-  function ultraAIPredict(history) {
-    if (history.length < 5) {
-      return { prediction: Math.random() > 0.5 ? "BIG" : "SMALL" };
+      const interval = setInterval(() => {
+        typeTarget.innerHTML = `${text.slice(0, index)}<span class="cursor">|</span>`;
+        index += 1;
+        if (index > text.length) {
+          clearInterval(interval);
+          setTimeout(() => {
+            onComplete && onComplete();
+          }, 1400); // pause ~1.4s after typing
+        }
+      }, 36); // type speed
     }
-    let recentResults = history.filter(h => h.result !== "-").slice(0, 5);
-    let bigCount = 0;
-    let smallCount = 0;
-    let weight = 1;
-    for (let i = recentResults.length - 1; i >= 0; i--) {
-      let result = recentResults[i].result;
-      if (result >= 5) bigCount += weight;
-      else smallCount += weight;
-      weight *= 1.2;
+
+    function sequence(messagesArr) {
+      let i = 0;
+      function next() {
+        if (i < messagesArr.length) {
+          typeMessage(messagesArr[i], () => {
+            // fade out effect between messages
+            typeTarget.style.opacity = 1;
+            typeTarget.animate([
+              { opacity: 1, filter: 'blur(0px)' },
+              { opacity: 0, filter: 'blur(2px)' }
+            ], { duration: 420, easing: 'ease-out' }).onfinish = () => {
+              typeTarget.style.opacity = 0;
+              i += 1;
+              setTimeout(() => {
+                typeTarget.style.opacity = 1;
+                next();
+              }, 380);
+            };
+          });
+        } else {
+          typeTarget.innerHTML = "";
+          actions.hidden = false;
+          actions.animate([
+            { opacity: 0, transform: 'translateY(8px) scale(0.98)' },
+            { opacity: 1, transform: 'translateY(0) scale(1)' }
+          ], { duration: 360, easing: 'ease-out' });
+        }
+      }
+      next();
     }
-    return { prediction: bigCount > smallCount ? "BIG" : "SMALL" };
-  }
 
-  function updateLastStatus(actualNumber) {
-    const actualCategory = actualNumber >= 5 ? 'BIG' : 'SMALL';
-    const match = actualCategory === lastPrediction;
-    lastStatus = match ? 'WIN' : 'LOSS';
-  }
+    sequence(messages);
 
-  async function fetchGameResult() {
-    try {
-      let response = await fetch("https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pageSize: 10, pageNo: 1, typeId: 1, language: 0,
-          random: "4a0522c6ecd8410496260e686be2a57c",
-          signature: "334B5E70A0C9B8918B0B15E517E2069C",
-          timestamp: Math.floor(Date.now() / 1000)
-        })
+    document.querySelectorAll('.plan-button').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = (e.clientX || rect.width / 2) - rect.left;
+        const y = (e.clientY || rect.height / 2) - rect.top;
+
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 700);
       });
-      let data = await response.json();
-      return data?.data?.list?.[0] || null;
-    } catch (e) {
-      console.error("API Error fetching game result:", e);
-      return null;
-    }
-  }
-
-  async function updatePrediction() {
-    let result = await fetchGameResult();
-    if (!result) {
-      console.warn("No API result or API error. Retrying in 5 seconds...");
-      setTimeout(updatePrediction, 5000);
-      return;
-    }
-    if (result.issueNumber === lastFetchedPeriod) return;
-
-    if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
-      const actualNumber = Number(result.number);
-      updateLastStatus(actualNumber);
-      historyData[0].result = actualNumber;
-      historyData[0].resultStatus = lastStatus;
-    }
-
-    const aiDecision = ultraAIPredict(historyData);
-    lastPrediction = aiDecision.prediction;
-    lastOppositeNumber = getOppositeNumber(lastPrediction);
-    globalPrediction = lastPrediction;
-
-    let nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
-    let nextPeriod = nextPeriodFull.slice(-4);
-
-    document.getElementById("periodDisplay").value = nextPeriod;
-    document.getElementById("predictionDisplay").innerText = globalPrediction;
-    document.getElementById("oppositeNumberDisplay").innerText = lastOppositeNumber;
-
-    historyData.unshift({
-      period: nextPeriod,
-      prediction: globalPrediction,
-      oppositeNumber: lastOppositeNumber,
-      result: "-",
-      resultStatus: "Pending"
     });
-    if (historyData.length > 20) historyData.pop();
-
-    updateHistory();
-    updateStats();
-    lastFetchedPeriod = result.issueNumber;
-  }
-
-  function deleteHistory(index) {
-    historyData.splice(index, 1);
-    updateHistory();
-    updateStats();
-  }
-
-  function updateHistory() {
-    const container = document.getElementById("historyContainer");
-    container.innerHTML = historyData.map((item, index) => {
-      let color = item.resultStatus === "WIN" ? "green" : item.resultStatus === "LOSS" ? "red" : "yellow";
-      let iconClass = item.resultStatus === "WIN" ? "fa-circle-check win-icon" :
-                      item.resultStatus === "LOSS" ? "fa-circle-xmark loss-icon" :
-                      "fa-spinner spinner";
-      return `<div class="history-card ${color}">
-        <div style="flex: 1;">
-          <div><strong><i class="fa fa-calendar-alt"></i> P-${item.period}</strong></div>
-          <div><i class="fa fa-chart-line"></i> ${item.prediction} | <i class="fa fa-sync-alt"></i> ${item.oppositeNumber}</div>
-          <div><i class="fa fa-dice"></i> ${item.result !== "-" ? item.result : "Waiting..."}</div>
-        </div>
-        <div class="history-actions">
-          <i class="fa ${iconClass}"></i>
-          <i class="fa-solid fa-trash-alt" onclick="deleteHistory(${index})"></i>
-        </div>
-      </div>`;
-    }).join("");
-  }
-
-  function updateStats() {
-    const wins = historyData.filter(item => item.resultStatus === "WIN").length;
-    const losses = historyData.filter(item => item.resultStatus === "LOSS").length;
-    const total = wins + losses;
-    const accuracy = total > 0 ? ((wins / total) * 100).toFixed(2) : 0;
-    document.getElementById("wins").textContent = wins;
-    document.getElementById("losses").textContent = losses;
-    document.getElementById("accuracy").textContent = `${accuracy}%`;
-  }
-
-  function startPredictor() {
-    updatePrediction();
-    predictorInterval = setInterval(updatePrediction, 5000);
-  }
-</script>
-<div class="footer">TG @BOSSFAIZAN</div>
+  </script>
 </body>
 </html>
