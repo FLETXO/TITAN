@@ -1,493 +1,980 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>𝗕𝗢𝗦𝗦 𝗙𝗨𝗦𝗜𝗢𝗡</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
-  <style>
-    /* Root Variables for a Red & Black Theme */
-    :root {
-      --dark-bg: #000000;
-      --card-bg: #1a1f2c;
-      --text-light: #e0e6f0;
-      --text-dark: #0d1117;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLETXO DECRYPTION HTML</title>
+    <style>
+      :root {
+        --bg: #05070c;
+        --bg-2: #0b1020;
+        --neon: #34d8ff;
+        --neon-2: #9af7ff;
+        --accent: #00b3ff;
+        --white: #eaf7ff;
+        --good: #00ffaa;
+        --bad: #ff2a55;
+        --warning: #ff3d00;
+        --glow: 0 0 12px rgba(52, 216, 255, 0.8), 0 0 24px rgba(52, 216, 255, 0.35),
+          0 0 48px rgba(52, 216, 255, 0.2);
+        --glow-white: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 36px rgba(255, 255, 255, 0.35);
+      }
 
-      --neon-cyan: #00f0ff;
-      --neon-blue: #00aaff;
-      --neon-purple: #a050ff;
-      --neon-green: #3aff95;
-      --neon-red: #ff4d4d;
-      --neon-yellow: #fff000;
+      * {
+        box-sizing: border-box;
+      }
 
-      --border-glow-strength: 0 0 15px;
-      --text-glow-strength: 0 0 8px;
-    }
+      html, body {
+        height: 100%;
+        margin: 0;
+        background: radial-gradient(circle at 20% 10%, #091126 0%, var(--bg) 40%, #04060a 100%);
+        color: var(--white);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        overflow: hidden;
+      }
 
-    /* Universal Box Sizing & Font Smoothing */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+      /* Background Video */
+      .bg-video-wrap {
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        overflow: hidden;
+        filter: saturate(1.05) brightness(0.35);
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      .bg-video-wrap video {
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+      }
 
-    /* Body & HTML Styling for Responsiveness */
-    body {
-      background: var(--dark-bg);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-light);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 20px;
-      overflow-y: auto;
-    }
+      /* Particles */
+      #particlesCanvas {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+      }
 
-    /* Container with max width for mobile screens */
-    #predictor-content {
-      width: 100%;
-      max-width: 500px; /* Slightly wider for tablets, smaller for phones */
-      padding: 10px;
-    }
+      /* Ambient grid */
+      .grid-overlay {
+        position: fixed;
+        inset: 0;
+        background:
+          repeating-linear-gradient(0deg, rgba(0, 179, 255, 0.06) 0 1px, transparent 2px 80px),
+          repeating-linear-gradient(90deg, rgba(0, 179, 255, 0.05) 0 1px, transparent 2px 80px);
+        z-index: -1;
+        mix-blend-mode: screen;
+        opacity: 0.4;
+        pointer-events: none;
+      }
 
-    /* SVG Title styling with responsive font size */
-    .wrapper {
-      text-align: center;
-      margin-bottom: 30px;
-      filter: drop-shadow(0 0 8px var(--neon-red));
-    }
-    .wrapper svg {
-      width: 100%;
-      height: 50px;
-    }
-    .wrapper svg text {
-      font-family: 'Orbitron', sans-serif;
-      fill: none;
-      stroke: var(--neon-red);
-      stroke-width: 1.2px;
-      stroke-dasharray: 600;
-      stroke-dashoffset: 600;
-      animation: dash 5s linear infinite alternate;
-      font-size: 24px;
-      font-weight: 700;
-    }
+      header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        background: linear-gradient(90deg, rgba(5, 7, 12, 0.9), rgba(11, 16, 32, 0.75));
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: var(--glow);
+        z-index: 5;
+      }
 
-    @keyframes dash {
-      0% { stroke-dashoffset: 600; }
-      100% { stroke-dashoffset: 0; }
-    }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
 
-    /* Card styles with responsive padding & font sizes */
-    .card {
-      background: #2c2c2c;
-      border-radius: 15px;
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      box-shadow: var(--border-glow-strength) var(--neon-red), inset 0 0 5px rgba(255, 0, 0, 0.2);
-      padding: 15px;
-      margin-top: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--border-glow-strength) var(--neon-purple), inset 0 0 8px rgba(255, 0, 0, 0.5);
-    }
+      .brand .logo {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: radial-gradient(circle at 30% 30%, #0fe 0%, #06f 60%, #026 100%);
+        box-shadow: 0 0 28px rgba(0, 179, 255, 0.55), inset 0 0 18px rgba(255, 255, 255, 0.15);
+        position: relative;
+      }
+      .brand .logo::after {
+        content: "ॐ"; /* Om symbol for devotional accent */
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: var(--glow-white);
+        filter: drop-shadow(0 0 6px rgba(255,255,255,0.8));
+      }
 
-    /* Labels and Inputs */
-    .period-label {
-      font-weight: 600;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      font-size: 1em;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
-    }
-    .period-label i {
-      margin-right: 8px;
-    }
-    .period-input {
-      width: 100%;
-      padding: 10px;
-      text-align: center;
-      font-size: 1.2em;
-      font-family: 'Orbitron', sans-serif;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--neon-red);
-      border-radius: 8px;
-      margin-bottom: 12px;
-      color: var(--neon-green);
-      box-shadow: inset 0 0 8px rgba(58, 255, 149, 0.5);
-      text-shadow: var(--text-glow-strength) var(--neon-green);
-    }
+      h1 {
+        margin: 0;
+        font-size: 1.25rem;
+        letter-spacing: 0.18em;
+        color: var(--neon-2);
+        text-shadow: var(--glow);
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
 
-    /* Result Section */
-    .result-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      margin-top: 10px;
-      font-size: 1em;
-    }
-    .result-section span i {
-      margin-right: 6px;
-    }
-    .big-text {
-      background: linear-gradient(45deg, var(--neon-green), var(--neon-red));
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 1em;
-      font-weight: 700;
-      color: var(--text-dark);
-      box-shadow: 0 0 10px rgba(58, 255, 149, 0.7);
-    }
-    .opposite-number {
-      font-size: 1em;
-      color: var(--neon-purple);
-      font-weight: 700;
-      text-shadow: var(--text-glow-strength) var(--neon-purple);
-    }
+      .hud {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 0.95rem;
+        color: #cfe9ff;
+      }
+      .hud .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        background: rgba(10, 18, 36, 0.55);
+        box-shadow: inset 0 0 22px rgba(0, 183, 255, 0.15), 0 0 18px rgba(0, 183, 255, 0.1);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--neon);
+        box-shadow: var(--glow);
+      }
 
-    /* Dashboard Title and Stats */
-    .dashboard-title {
-      text-align: center;
-      font-size: 1.2em;
-      font-weight: 700;
-      margin-bottom: 20px;
-      border-bottom: 2px solid rgba(255, 0, 0, 0.3);
-      padding-bottom: 8px;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
-    }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 0;
-      border-bottom: 1px dashed rgba(255, 0, 0, 0.2);
-      font-size: 0.9em;
-    }
-    .info-row span:first-child {
-      display: flex;
-      align-items: center;
-      color: var(--text-light);
-    }
-    .info-row span:first-child i {
-      margin-right: 6px;
-    }
-    .connected {
-      color: var(--neon-green);
-      font-weight: bold;
-      text-shadow: var(--text-glow-strength) var(--neon-green);
-    }
+      main {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+        height: calc(100vh - 72px);
+        padding: 18px;
+      }
 
-    /* Footer styling for small screens */
-    .footer {
-      text-align: center;
-      font-weight: 600;
-      font-size: 14px;
-      margin-top: 30px;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
-    }
+      .panel {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: linear-gradient(180deg, rgba(6, 10, 20, 0.75), rgba(3, 6, 12, 0.85));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.35), inset 0 0 40px rgba(0, 191, 255, 0.05);
+        backdrop-filter: blur(4px);
+      }
 
-    /* History */
-    .history-title {
-      font-size: 1.4em;
-      font-weight: 700;
-      margin-top: 30px;
-      text-align: center;
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) var(--neon-red);
-    }
-    .history-card {
-      background: #2c2c2c;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--border-glow-strength) rgba(255, 0, 0, 0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      font-size: 0.85em;
-      border-left: 4px solid transparent;
-    }
-    .history-card:hover {
-      transform: translateX(3px);
-      box-shadow: var(--border-glow-strength) rgba(255, 0, 0, 0.3);
-    }
-    .history-card.yellow {
-      border-left-color: var(--neon-yellow);
-      box-shadow: var(--border-glow-strength) rgba(255, 255, 0, 0.2);
-    }
-    .history-card.green {
-      border-left-color: var(--neon-green);
-      box-shadow: var(--border-glow-strength) rgba(58, 255, 149, 0.2);
-    }
-    .history-card.red {
-      border-left-color: var(--neon-red);
-      box-shadow: var(--border-glow-strength) rgba(255, 77, 77, 0.2);
-    }
-    .history-card div strong {
-      color: var(--neon-red);
-      text-shadow: var(--text-glow-strength) rgba(255, 0, 0, 0.5);
-    }
-    .history-card div i {
-      margin-right: 4px;
-    }
-    .history-actions i {
-      margin-left: 10px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: color 0.2s ease, transform 0.2s ease;
-      filter: drop-shadow(0 0 3px rgba(0,0,0,0.5));
-    }
-    .fa-trash-alt {
-      color: var(--neon-red);
-    }
-    .fa-trash-alt:hover {
-      transform: scale(1.1);
-      color: #ff0000;
-    }
-    .spinner {
-      animation: spin 1.5s linear infinite;
-      color: var(--neon-yellow);
-      filter: drop-shadow(0 0 4px var(--neon-yellow));
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .win-icon {
-      animation: bounce 0.8s ease-in-out infinite;
-      color: var(--neon-green);
-      filter: drop-shadow(0 0 5px var(--neon-green));
-    }
-    @keyframes bounce {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-    .loss-icon {
-      animation: shake 0.6s ease-in-out infinite;
-      color: var(--neon-red);
-      filter: drop-shadow(0 0 5px var(--neon-red));
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-3px); }
-      50% { transform: translateX(3px); }
-      75% { transform: translateX(-3px); }
-    }
-  </style>
-</head>
-<body>
-  <!-- Predictor Content -->
-  <div id="predictor-content">
-    <div class="container">
-      <div class="wrapper">
-        <svg viewBox="0 0 400 70">
-          <text x="50%" y="50%" dy=".35em" text-anchor="middle">
-            𝗕𝗢𝗦𝗦 𝗙𝗨𝗦𝗜𝗢𝗡
-          </text>
-        </svg>
-      </div>
+      .panel h2 {
+        margin: 0 0 8px 0;
+        font-size: 0.95rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--neon-2);
+        opacity: 0.9;
+      }
 
-      <div class="card">
-        <div class="period-label"><i class="fa-solid fa-calendar-days"></i> Current Period</div>
-        <input type="text" id="periodDisplay" class="period-input" value="-" readonly />
-        <div class="result-section">
-          <span><i class="fa-solid fa-chart-bar"></i> Prediction</span>
-          <span class="big-text" id="predictionDisplay">-</span>
-          <span class="opposite-number" id="oppositeNumberDisplay">-</span>
-        </div>
-      </div>
+      .uploader {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
 
-      <div class="card">
-        <div class="dashboard-title">Analysis Dashboard</div>
-        <div class="info-row"><span><i class="fa-solid fa-percent"></i> Win Rate</span><span id="accuracy">0%</span></div>
-        <div class="info-row"><span><i class="fa-solid fa-trophy"></i> Wins</span><span id="wins">0</span></div>
-        <div class="info-row"><span><i class="fa-solid fa-skull-crossbones"></i> Losses</span><span id="losses">0</span></div>
-        <div class="info-row"><span><i class="fa-solid fa-server"></i> Server Status</span><span class="connected">Connected</span></div>
-      </div>
+      input[type="file"]::file-selector-button {
+        border: none;
+        background: rgba(0, 179, 255, 0.14);
+        color: var(--white);
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: var(--glow);
+        transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+      }
+      input[type="file"]::file-selector-button:hover {
+        transform: translateY(-1px) scale(1.02);
+        background: rgba(0, 179, 255, 0.25);
+      }
 
-      <div class="footer">TG @BOSSFAIZAN</div>
+      .textareas {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
 
-      <div class="history-title">Prediction History</div>
-      <div id="historyContainer"></div>
+      textarea {
+        width: 100%;
+        min-height: 320px;
+        max-height: calc(100vh - 320px);
+        resize: vertical;
+        padding: 14px;
+        border-radius: 14px;
+        background: #030911;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #dff6ff;
+        font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.92rem;
+        line-height: 1.45rem;
+        box-shadow: inset 0 0 22px rgba(0, 179, 255, 0.08);
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        padding-top: 4px;
+      }
+
+      .select, select {
+        background: rgba(0, 179, 255, 0.14);
+        color: var(--white);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 9px 12px;
+        border-radius: 12px;
+        box-shadow: var(--glow);
+      }
+
+      .btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        color: var(--white);
+        padding: 10px 14px;
+        background: linear-gradient(180deg, rgba(0, 179, 255, 0.18), rgba(0, 179, 255, 0.08));
+        cursor: pointer;
+        box-shadow: var(--glow);
+        transform: translateZ(0);
+        transition: transform 0.15s ease, filter 0.2s ease, background 0.2s ease;
+        user-select: none;
+      }
+      .btn:hover { transform: translateY(-1px) scale(1.02); filter: brightness(1.1); }
+      .btn:active { transform: translateY(0) scale(0.98); filter: brightness(0.9); }
+
+      .status-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 28px;
+      }
+      .status-label {
+        font-size: 0.9rem;
+        letter-spacing: 0.08em;
+        color: #a9d8ff;
+      }
+
+      .scene-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 8;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9;
+        pointer-events: none;
+      }
+
+      /* Time travel success effect */
+      .fire-warp {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 50% 60%, rgba(0, 247, 255, 0.35), transparent 40%),
+          radial-gradient(circle at 50% 40%, rgba(0, 192, 255, 0.35), transparent 45%),
+          conic-gradient(from 0deg, rgba(0, 255, 234, 0.12), rgba(0, 170, 255, 0.18), rgba(0, 255, 234, 0.12));
+        mix-blend-mode: screen;
+        animation: warpPulse 1.2s ease-in-out 1, warpSpin 2.4s linear infinite;
+        filter: blur(1px) saturate(1.2);
+        opacity: 0;
+      }
+      .fire-warp.active { opacity: 1; }
+      @keyframes warpPulse { 0%{transform: scale(0.9);} 50%{transform: scale(1.04);} 100%{transform: scale(1);} }
+      @keyframes warpSpin { to{ transform: rotate(360deg);} }
+
+      /* Failure alert */
+      .alert-overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(255, 32, 64, 0.18), transparent 50%);
+        animation: alertFlash 0.8s ease-in-out 6;
+        opacity: 0;
+      }
+      .alert-overlay.active { opacity: 1; }
+      @keyframes alertFlash { 0%,100%{filter: brightness(1);} 50%{filter: brightness(2);} }
+
+      /* Future and past scenes */
+      canvas#futureScene, canvas#pastScene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .footer-bar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 8px 0 0;
+        opacity: 0.85;
+      }
+
+      .hint {
+        font-size: 0.8rem;
+        color: #9cc9ff;
+        opacity: 0.85;
+      }
+
+      /* Modal preview */
+      .preview-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+      }
+      .preview-modal.active { display: flex; }
+      .preview-card {
+        width: min(1100px, 92vw);
+        height: min(720px, 86vh);
+        background: #02060a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 50px 120px rgba(0,0,0,0.55);
+      }
+      .preview-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: linear-gradient(180deg, rgba(0, 179, 255, 0.2), rgba(0, 179, 255, 0.05));
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      iframe#previewFrame {
+        width: 100%;
+        height: calc(100% - 46px);
+        border: none;
+        background: white;
+      }
+
+      /* Responsive */
+      @media (max-width: 1060px) {
+        main { grid-template-columns: 1fr; height: auto; overflow: auto; }
+        textarea { min-height: 220px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-video-wrap">
+      <video id="bgVideo" autoplay muted loop playsinline></video>
     </div>
-  </div>
+    <canvas id="particlesCanvas"></canvas>
+    <div class="grid-overlay"></div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-<script>
-  // Updated Firebase config for Android compatibility
-  const firebaseConfig = {
-    apiKey: "AIzaSyCpSU98D6wMV1HyS5DpmuaaVzDswbyNrmo",
-    databaseURL: "https://fletxofusiondino-default-rtdb.firebaseio.com"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-
-  // --- Global Variables ---
-  let historyData = [];
-  let lastFetchedPeriod = null;
-  let lastPrediction = null;
-  let lastOppositeNumber = null;
-  let globalPrediction = null;
-  let predictorInterval = null;
-
-  // --- Device ID ---
-  let deviceId = localStorage.getItem("deviceId");
-  if (!deviceId) {
-    deviceId = "device-" + Math.random().toString(36).substring(2, 15) + Date.now();
-    localStorage.setItem("deviceId", deviceId);
-  }
-
-  // --- Start predictor ---
-  startPredictor();
-
-  // --- Functions ---
-  function getOppositeNumber(prediction) {
-    const smallNumbers = [1, 2, 3, 4, 0];
-    const bigNumbers = [8, 9, 7, 6, 5];
-    let arr = prediction === "BIG" ? smallNumbers : bigNumbers;
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
-  function ultraAIPredict(history) {
-    if (history.length < 5) {
-      return { prediction: Math.random() > 0.5 ? "BIG" : "SMALL" };
-    }
-    let recentResults = history.filter(h => h.result !== "-").slice(0, 5);
-    let bigCount = 0;
-    let smallCount = 0;
-    let weight = 1;
-    for (let i = recentResults.length - 1; i >= 0; i--) {
-      let result = recentResults[i].result;
-      if (result >= 5) bigCount += weight;
-      else smallCount += weight;
-      weight *= 1.2;
-    }
-    return { prediction: bigCount > smallCount ? "BIG" : "SMALL" };
-  }
-
-  function updateLastStatus(actualNumber) {
-    const actualCategory = actualNumber >= 5 ? 'BIG' : 'SMALL';
-    const match = actualCategory === lastPrediction;
-    lastStatus = match ? 'WIN' : 'LOSS';
-  }
-
-  async function fetchGameResult() {
-    try {
-      let response = await fetch("https://api.bdg88zf.com/api/webapi/GetNoaverageEmerdList", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pageSize: 10, pageNo: 1, typeId: 1, language: 0,
-          random: "4a0522c6ecd8410496260e686be2a57c",
-          signature: "334B5E70A0C9B8918B0B15E517E2069C",
-          timestamp: Math.floor(Date.now() / 1000)
-        })
-      });
-      let data = await response.json();
-      return data?.data?.list?.[0] || null;
-    } catch (e) {
-      console.error("API Error fetching game result:", e);
-      return null;
-    }
-  }
-
-  async function updatePrediction() {
-    let result = await fetchGameResult();
-    if (!result) {
-      console.warn("No API result or API error. Retrying in 5 seconds...");
-      setTimeout(updatePrediction, 5000);
-      return;
-    }
-    if (result.issueNumber === lastFetchedPeriod) return;
-
-    if (historyData.length > 0 && historyData[0].resultStatus === "Pending") {
-      const actualNumber = Number(result.number);
-      updateLastStatus(actualNumber);
-      historyData[0].result = actualNumber;
-      historyData[0].resultStatus = lastStatus;
-    }
-
-    const aiDecision = ultraAIPredict(historyData);
-    lastPrediction = aiDecision.prediction;
-    lastOppositeNumber = getOppositeNumber(lastPrediction);
-    globalPrediction = lastPrediction;
-
-    let nextPeriodFull = (BigInt(result.issueNumber) + 1n).toString();
-    let nextPeriod = nextPeriodFull.slice(-4);
-
-    document.getElementById("periodDisplay").value = nextPeriod;
-    document.getElementById("predictionDisplay").innerText = globalPrediction;
-    document.getElementById("oppositeNumberDisplay").innerText = lastOppositeNumber;
-
-    historyData.unshift({
-      period: nextPeriod,
-      prediction: globalPrediction,
-      oppositeNumber: lastOppositeNumber,
-      result: "-",
-      resultStatus: "Pending"
-    });
-    if (historyData.length > 20) historyData.pop();
-
-    updateHistory();
-    updateStats();
-    lastFetchedPeriod = result.issueNumber;
-  }
-
-  function deleteHistory(index) {
-    historyData.splice(index, 1);
-    updateHistory();
-    updateStats();
-  }
-
-  function updateHistory() {
-    const container = document.getElementById("historyContainer");
-    container.innerHTML = historyData.map((item, index) => {
-      let color = item.resultStatus === "WIN" ? "green" : item.resultStatus === "LOSS" ? "red" : "yellow";
-      let iconClass = item.resultStatus === "WIN" ? "fa-circle-check win-icon" :
-                      item.resultStatus === "LOSS" ? "fa-circle-xmark loss-icon" :
-                      "fa-spinner spinner";
-      return `<div class="history-card ${color}">
-        <div style="flex: 1;">
-          <div><strong><i class="fa fa-calendar-alt"></i> P-${item.period}</strong></div>
-          <div><i class="fa fa-chart-line"></i> ${item.prediction} | <i class="fa fa-sync-alt"></i> ${item.oppositeNumber}</div>
-          <div><i class="fa fa-dice"></i> ${item.result !== "-" ? item.result : "Waiting..."}</div>
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <h1>FLETXO DECRYPTION HTML</h1>
+      </div>
+      <div class="hud">
+        <div class="pill" title="Local time">
+          <span class="dot"></span>
+          <span id="clock">--:--:--</span>
         </div>
-        <div class="history-actions">
-          <i class="fa ${iconClass}"></i>
-          <i class="fa-solid fa-trash-alt" onclick="deleteHistory(${index})"></i>
+        <div class="pill" title="Estimated network speed">
+          <span class="dot" style="background: var(--good)"></span>
+          <span id="net">net: …</span>
         </div>
-      </div>`;
-    }).join("");
-  }
+      </div>
+    </header>
 
-  function updateStats() {
-    const wins = historyData.filter(item => item.resultStatus === "WIN").length;
-    const losses = historyData.filter(item => item.resultStatus === "LOSS").length;
-    const total = wins + losses;
-    const accuracy = total > 0 ? ((wins / total) * 100).toFixed(2) : 0;
-    document.getElementById("wins").textContent = wins;
-    document.getElementById("losses").textContent = losses;
-    document.getElementById("accuracy").textContent = `${accuracy}%`;
-  }
+    <main>
+      <section class="panel">
+        <h2>Input / Encryption Box</h2>
+        <div class="uploader">
+          <input id="fileInput" type="file" accept=".html,.htm,.txt,.b64" />
+          <button class="btn" id="pasteSampleBtn">Paste example</button>
+          <span class="hint">Upload an HTML file — its code will appear here.</span>
+        </div>
+        <div class="textareas">
+          <div>
+            <label class="hint">Encrypted / Original</label>
+            <textarea id="inputBox" placeholder="Upload a file or paste encrypted content here..."></textarea>
+          </div>
+          <div>
+            <label class="hint">Decrypted Output</label>
+            <textarea id="outputBox" placeholder="Decrypted HTML will appear here..." readonly></textarea>
+          </div>
+        </div>
+        <div class="controls">
+          <select id="modeSelect" class="select" title="Decryption mode">
+            <option value="auto">Auto Detect</option>
+            <option value="base64">Base64</option>
+            <option value="atoz">A↔Z (Atbash)</option>
+            <option value="sym">$>` mapping</option>
+            <option value="none">Replay normal</option>
+          </select>
+          <button class="btn" id="decryptBtn">Decrypt</button>
+          <button class="btn" id="resetBtn">Reset</button>
+          <button class="btn" id="previewBtn">Open Preview</button>
+          <span id="status" class="status-label">Ready.</span>
+        </div>
+        <div class="footer-bar">
+          <input id="bgUrl" class="select" style="flex:1; min-width: 240px" placeholder="Optional: paste devotional/background video URL (mp4/webm)" />
+          <button class="btn" id="bgSetBtn">Set Background</button>
+          <span class="hint">Tip: Try a short looped devotional background video for an immersive feel.</span>
+        </div>
+      </section>
 
-  function startPredictor() {
-    updatePrediction();
-    predictorInterval = setInterval(updatePrediction, 5000);
-  }
-</script>
-<div class="footer">TG @BOSSFAIZAN</div>
-</body>
+      <section class="panel">
+        <h2>Scenes & Effects</h2>
+        <div class="status-row">
+          <span class="status-label">Success shows a futuristic time-warp with cars and planes. Failure shows a red alert with dinosaurs.</span>
+        </div>
+        <div class="status-row">
+          <span class="hint">Particles adapt to success (teal) or failure (crimson). Click buttons for neon ripple feedback.</span>
+        </div>
+        <div class="status-row">
+          <span class="hint">Preview runs in a sandboxed iframe. Use responsibly.</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- Effect layers -->
+    <div class="scene-layer">
+      <canvas id="futureScene"></canvas>
+      <canvas id="pastScene" style="display:none"></canvas>
+    </div>
+    <div class="overlay">
+      <div class="fire-warp" id="fireWarp"></div>
+      <div class="alert-overlay" id="alertOverlay"></div>
+    </div>
+
+    <!-- Preview modal -->
+    <div class="preview-modal" id="previewModal">
+      <div class="preview-card">
+        <div class="preview-top">
+          <div class="hint">Sandboxed Preview</div>
+          <button class="btn" id="closePreview">Close</button>
+        </div>
+        <iframe id="previewFrame" sandbox="allow-scripts allow-forms"></iframe>
+      </div>
+    </div>
+
+    <script>
+      // Utility: debounced resize handler for canvases
+      function createResize(fn, delay = 120) {
+        let t = null;
+        const listener = () => {
+          clearTimeout(t);
+          t = setTimeout(fn, delay);
+        };
+        window.addEventListener('resize', listener);
+        return () => window.removeEventListener('resize', listener);
+      }
+
+      // Clock
+      function startClock() {
+        const el = document.getElementById('clock');
+        const format = (n) => String(n).padStart(2, '0');
+        setInterval(() => {
+          const d = new Date();
+          const hh = format(d.getHours());
+          const mm = format(d.getMinutes());
+          const ss = format(d.getSeconds());
+          el.textContent = `${hh}:${mm}:${ss}`;
+        }, 1000);
+      }
+
+      // Network speed
+      function setupNetworkHud() {
+        const el = document.getElementById('net');
+        function updateByConnection() {
+          const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+          if (c && typeof c.downlink === 'number') {
+            el.textContent = `${c.downlink.toFixed(1)} Mbps`;
+          }
+        }
+        updateByConnection();
+        const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (c) c.addEventListener('change', updateByConnection);
+
+        // Fallback simple ping-based estimate using a small data fetch
+        async function estimateViaFetch() {
+          try {
+            const sizeKb = 64; // approximate
+            const blob = new Blob([new Uint8Array(sizeKb * 1024)], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const t0 = performance.now();
+            await fetch(url, { cache: 'no-store' });
+            const t1 = performance.now();
+            URL.revokeObjectURL(url);
+            const sec = Math.max((t1 - t0) / 1000, 0.001);
+            const mbps = (sizeKb / 1024) / sec * 8; // MB -> Mb
+            if (!isFinite(mbps)) return;
+            el.textContent = `${mbps.toFixed(2)} Mbps`;
+          } catch (e) {
+            // ignore
+          }
+        }
+        setInterval(estimateViaFetch, 12000);
+      }
+
+      // Particles backdrop
+      const ParticleWorld = (() => {
+        const canvas = document.getElementById('particlesCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let palette = { color: 'rgba(0, 200, 255, 0.9)', tail: 'rgba(0, 200, 255, 0.1)' };
+        let speedFactor = 1.0;
+
+        function resize() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(innerWidth * dpr);
+          canvas.height = Math.floor(innerHeight * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function spawn(count) {
+          particles = [];
+          for (let i = 0; i < count; i++) {
+            particles.push({
+              x: Math.random() * innerWidth,
+              y: Math.random() * innerHeight,
+              vx: (Math.random() - 0.5) * (0.8 + Math.random()) * 0.6,
+              vy: (Math.random() - 0.5) * (0.8 + Math.random()) * 0.6,
+              r: 1 + Math.random() * 1.6,
+              life: 0,
+            });
+          }
+        }
+
+        function setMood(mood) {
+          if (mood === 'success') {
+            palette = { color: 'rgba(0, 255, 214, 0.95)', tail: 'rgba(0, 180, 255, 0.12)' };
+            speedFactor = 1.6;
+            spawn(190);
+          } else if (mood === 'failure') {
+            palette = { color: 'rgba(255, 64, 98, 0.95)', tail: 'rgba(255, 32, 64, 0.12)' };
+            speedFactor = 0.8;
+            spawn(140);
+          } else {
+            palette = { color: 'rgba(0, 200, 255, 0.9)', tail: 'rgba(0, 200, 255, 0.1)' };
+            speedFactor = 1.0;
+            spawn(160);
+          }
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          for (const p of particles) {
+            ctx.beginPath();
+            ctx.fillStyle = palette.color;
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // tail
+            ctx.beginPath();
+            ctx.strokeStyle = palette.tail;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x - p.vx * 8, p.y - p.vy * 8);
+            ctx.stroke();
+
+            p.x += p.vx * speedFactor;
+            p.y += p.vy * speedFactor;
+            p.life += 1;
+
+            if (p.x < -10) p.x = innerWidth + 10;
+            if (p.x > innerWidth + 10) p.x = -10;
+            if (p.y < -10) p.y = innerHeight + 10;
+            if (p.y > innerHeight + 10) p.y = -10;
+          }
+          requestAnimationFrame(draw);
+        }
+
+        resize();
+        spawn(160);
+        draw();
+        createResize(resize, 100);
+
+        return { setMood };
+      })();
+
+      // Future scene: cars and planes in pseudo 3D
+      const FutureScene = (() => {
+        const canvas = document.getElementById('futureScene');
+        const ctx = canvas.getContext('2d');
+        let entities = [];
+
+        function resize() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(innerWidth * dpr);
+          canvas.height = Math.floor(innerHeight * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function spawnEntity(kind) {
+          const depth = Math.random() * 0.8 + 0.2; // 0.2 near, 1 far
+          const speed = (1.8 - depth) * (kind === 'plane' ? 2.2 : 1.6);
+          const y = Math.random() * innerHeight * 0.8 + innerHeight * 0.1;
+          const fromLeft = Math.random() < 0.5;
+          const x = fromLeft ? -80 : innerWidth + 80;
+          const vx = (fromLeft ? 1 : -1) * speed;
+          entities.push({ kind, x, y, vx, depth, life: 0 });
+        }
+
+        function drawCar(x, y, scale) {
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.scale(scale, scale);
+          ctx.fillStyle = 'rgba(0, 220, 255, 0.9)';
+          // body
+          ctx.fillRect(-24, -8, 48, 16);
+          // cabin
+          ctx.fillStyle = 'rgba(180, 255, 255, 0.85)';
+          ctx.fillRect(-10, -14, 22, 10);
+          // wheels
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.beginPath(); ctx.arc(-16, 10, 4, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(16, 10, 4, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+
+        function drawPlane(x, y, scale) {
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.scale(scale, scale);
+          ctx.fillStyle = 'rgba(150, 240, 255, 0.9)';
+          ctx.beginPath();
+          ctx.moveTo(-26, 0);
+          ctx.lineTo(28, 0);
+          ctx.lineTo(10, -6);
+          ctx.lineTo(10, 6);
+          ctx.closePath();
+          ctx.fill();
+          // wings
+          ctx.fillStyle = 'rgba(0, 180, 255, 0.9)';
+          ctx.fillRect(-6, -12, 14, 4);
+          ctx.fillRect(-6, 8, 14, 4);
+          ctx.restore();
+        }
+
+        function step() {
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          if (Math.random() < 0.03) spawnEntity('car');
+          if (Math.random() < 0.02) spawnEntity('plane');
+          entities = entities.filter(e => e.x > -120 && e.x < innerWidth + 120);
+          for (const e of entities) {
+            e.x += e.vx;
+            e.life += 1;
+            const scale = 0.6 + (1 - e.depth) * 0.8;
+            if (e.kind === 'car') drawCar(e.x, e.y, scale);
+            else drawPlane(e.x, e.y - 30 * (1 - e.depth), scale);
+          }
+          requestAnimationFrame(step);
+        }
+
+        resize();
+        createResize(resize, 100);
+        step();
+
+        return { reset: () => { entities = []; } };
+      })();
+
+      // Past scene: dinosaurs and alerts
+      const PastScene = (() => {
+        const canvas = document.getElementById('pastScene');
+        const ctx = canvas.getContext('2d');
+        let dinos = [];
+
+        function resize() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(innerWidth * dpr);
+          canvas.height = Math.floor(innerHeight * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function spawnDino() {
+          const y = Math.random() * innerHeight * 0.7 + innerHeight * 0.2;
+          const fromLeft = Math.random() < 0.5;
+          const x = fromLeft ? -50 : innerWidth + 50;
+          const vx = (fromLeft ? 1 : -1) * (1.2 + Math.random() * 1.2);
+          dinos.push({ x, y, vx, life: 0, s: 0.8 + Math.random() * 0.7 });
+        }
+
+        function drawDino(x, y, s, t) {
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.scale(s, s);
+          ctx.font = '32px system-ui';
+          ctx.fillStyle = 'rgba(255, 80, 80, 0.95)';
+          const emoji = t % 30 < 15 ? '🦖' : '🦕';
+          ctx.fillText(emoji, -16, 10);
+          ctx.restore();
+        }
+
+        function step() {
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          if (Math.random() < 0.035) spawnDino();
+          dinos = dinos.filter(d => d.x > -120 && d.x < innerWidth + 120);
+          const t = performance.now() / 16;
+          for (const d of dinos) {
+            d.x += d.vx;
+            d.life += 1;
+            drawDino(d.x, d.y + Math.sin(d.life * 0.1) * 6, d.s, t);
+          }
+          requestAnimationFrame(step);
+        }
+
+        resize();
+        createResize(resize, 100);
+        step();
+
+        return { reset: () => { dinos = []; } };
+      })();
+
+      // Decryption logic
+      function isProbablyHTML(text) {
+        const s = text.slice(0, 1000).toLowerCase();
+        return /<!doctype|<html|<head|<body|<div|<span|<script|<style/.test(s);
+      }
+
+      function decodeBase64(input) {
+        // tolerate newlines and url-safe variants
+        const clean = input.replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
+        try {
+          const decoded = atob(clean);
+          return decoded;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function decodeAtbash(input) {
+        const A = 'A'.charCodeAt(0), Z = 'Z'.charCodeAt(0), a = 'a'.charCodeAt(0), z = 'z'.charCodeAt(0);
+        let out = '';
+        for (let i = 0; i < input.length; i++) {
+          const c = input.charCodeAt(i);
+          if (c >= A && c <= Z) out += String.fromCharCode(Z - (c - A));
+          else if (c >= a && c <= z) out += String.fromCharCode(z - (c - a));
+          else out += input[i];
+        }
+        return out;
+      }
+
+      function decodeSymbolMap(input) {
+        // Custom reversal for obfuscations using $, `, and special pairs
+        // Rules (decode):
+        //   $>  -> </
+        //   $<  -> <
+        //   $/  -> /
+        //   $`  -> >
+        //   `   -> >
+        //   $   -> <
+        let out = input;
+        out = out.replace(/\$>/g, '</');
+        out = out.replace(/\$\//g, '/');
+        out = out.replace(/\$</g, '<');
+        out = out.replace(/\$`/g, '>');
+        out = out.replace(/`/g, '>');
+        out = out.replace(/\$/g, '<');
+        return out;
+      }
+
+      function autoDecrypt(text) {
+        // Try Base64
+        const b64 = decodeBase64(text);
+        if (b64 && isProbablyHTML(b64)) return { ok: true, mode: 'base64', output: b64 };
+
+        // Try Atbash
+        const ab = decodeAtbash(text);
+        if (isProbablyHTML(ab)) return { ok: true, mode: 'atoz', output: ab };
+
+        // Try symbol mapping
+        const sy = decodeSymbolMap(text);
+        if (isProbablyHTML(sy)) return { ok: true, mode: 'sym', output: sy };
+
+        // If looks like HTML already
+        if (isProbablyHTML(text)) return { ok: true, mode: 'none', output: text };
+
+        return { ok: false, mode: 'auto', output: '' };
+      }
+
+      function doDecrypt(mode, input) {
+        try {
+          if (mode === 'base64') {
+            const out = decodeBase64(input);
+            if (out && isProbablyHTML(out)) return { ok: true, output: out };
+            return { ok: false, output: out || '' };
+          }
+          if (mode === 'atoz') {
+            const out = decodeAtbash(input);
+            if (isProbablyHTML(out)) return { ok: true, output: out };
+            return { ok: false, output: out };
+          }
+          if (mode === 'sym') {
+            const out = decodeSymbolMap(input);
+            if (isProbablyHTML(out)) return { ok: true, output: out };
+            return { ok: false, output: out };
+          }
+          if (mode === 'none') {
+            return { ok: isProbablyHTML(input), output: input };
+          }
+          // auto
+          return autoDecrypt(input);
+        } catch (e) {
+          return { ok: false, output: '' };
+        }
+      }
+
+      // Effects toggles
+      function triggerSuccessFX() {
+        const fire = document.getElementById('fireWarp');
+        const past = document.getElementById('pastScene');
+        past.style.display = 'none';
+        fire.classList.remove('active');
+        void fire.offsetWidth; // reflow
+        fire.classList.add('active');
+        ParticleWorld.setMood('success');
+        FutureScene.reset();
+      }
+
+      function triggerFailureFX() {
+        const alert = document.getElementById('alertOverlay');
+        const past = document.getElementById('pastScene');
+        past.style.display = 'block';
+        alert.classList.remove('active');
+        void alert.offsetWidth; // reflow
+        alert.classList.add('active');
+        ParticleWorld.setMood('failure');
+        PastScene.reset();
+      }
+
+      function clearFX() {
+        document.getElementById('pastScene').style.display = 'none';
+        document.getElementById('fireWarp').classList.remove('active');
+        document.getElementById('alertOverlay').classList.remove('active');
+        ParticleWorld.setMood('neutral');
+      }
+
+      // Wiring
+      function setupUI() {
+        const fileInput = document.getElementById('fileInput');
+        const inputBox = document.getElementById('inputBox');
+        const outputBox = document.getElementById('outputBox');
+        const modeSelect = document.getElementById('modeSelect');
+        const decryptBtn = document.getElementById('decryptBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const previewBtn = document.getElementById('previewBtn');
+        const status = document.getElementById('status');
+        const pasteSampleBtn = document.getElementById('pasteSampleBtn');
+
+        fileInput.addEventListener('change', async (e) => {
+          const f = e.target.files && e.target.files[0];
+          if (!f) return;
+          const text = await f.text();
+          inputBox.value = text;
+          status.textContent = `Loaded: ${f.name} (${(f.size/1024).toFixed(1)} KB)`;
+          clearFX();
+        });
+
+        pasteSampleBtn.addEventListener('click', () => {
+          // small Base64 sample of minimal HTML
+          const sample = btoa(`<!doctype html><html><head><meta charset="utf-8"><title>Sample</title></head><body><h1>Hello FLETXO</h1><p>This is a test page.</p></body></html>`);
+          inputBox.value = sample;
+          modeSelect.value = 'auto';
+          status.textContent = 'Sample Base64 HTML pasted.';
+          clearFX();
+        });
+
+        decryptBtn.addEventListener('click', () => {
+          const input = inputBox.value.trim();
+          if (!input) {
+            status.textContent = 'Nothing to decrypt.';
+            return;
+          }
+          const mode = modeSelect.value;
+          const res = doDecrypt(mode, input);
+          outputBox.value = res.output || '';
+          if (res.ok) {
+            status.textContent = `Decrypted OK via ${mode === 'auto' ? res.mode : mode}.`;
+            triggerSuccessFX();
+          } else {
+            status.textContent = 'Decrypt failed. Showing best-effort output if any.';
+            triggerFailureFX();
+          }
+        });
+
+        resetBtn.addEventListener('click', () => {
+          inputBox.value = '';
+          outputBox.value = '';
+          modeSelect.value = 'auto';
+          status.textContent = 'Reset.';
+          clearFX();
+        });
+
+        // Preview modal
+        const modal = document.getElementById('previewModal');
+        const frame = document.getElementById('previewFrame');
+        const closePreview = document.getElementById('closePreview');
+        previewBtn.addEventListener('click', () => {
+          const html = outputBox.value;
+          if (!html) {
+            status.textContent = 'Nothing to preview.';
+            return;
+          }
+          modal.classList.add('active');
+          const blob = new Blob([html], { type: 'text/html' });
+          frame.src = URL.createObjectURL(blob);
+        });
+        closePreview.addEventListener('click', () => {
+          modal.classList.remove('active');
+          frame.src = 'about:blank';
+        });
+
+        // Background video setter
+        const bgVideo = document.getElementById('bgVideo');
+        document.getElementById('bgSetBtn').addEventListener('click', () => {
+          const url = document.getElementById('bgUrl').value.trim();
+          if (!url) return;
+          bgVideo.src = url;
+          bgVideo.play().catch(() => {});
+        });
+      }
+
+      // Start
+      startClock();
+      setupNetworkHud();
+      setupUI();
+
+      // Provide a subtle default background if user does not set one
+      (function defaultBG() {
+        const candidates = [
+          // Placeholders; user can replace with a devotional video URL
+          'https://storage.googleapis.com/web-dev-assets/video-and-source-tags/chrome.webm',
+          'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4'
+        ];
+        const v = document.getElementById('bgVideo');
+        v.src = candidates[0];
+        v.play().catch(() => {
+          v.src = candidates[1];
+          v.play().catch(() => {});
+        });
+      })();
+    </script>
+  </body>
 </html>
